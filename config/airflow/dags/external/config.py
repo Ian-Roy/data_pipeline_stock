@@ -1,0 +1,1 @@
+alphavantage_api_key='WOU39UUA297NJ9H5'

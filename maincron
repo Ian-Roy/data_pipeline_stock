@@ -1,0 +1,1 @@
+* * * * * root cd /data_pipes && /usr/local/bin/python get_historic_moving_avg.py >> /var/log/cron.log

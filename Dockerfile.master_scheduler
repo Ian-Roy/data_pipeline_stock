@@ -1,0 +1,39 @@
+FROM python:3.8.6-buster
+
+USER root
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        build-essential \
+        libpq-dev \
+        firefox-esr \
+        python3 \
+        python3-pip \
+        python3-setuptools \
+        python3-dev \
+        cron \
+        nano
+
+
+COPY requirements.txt /requirements.txt
+
+RUN pip3 install -r /requirements.txt --user
+
+COPY ./data_pipes /data_pipes
+
+
+COPY maincron /etc/cron.d/maincron
+
+# Give execution rights on the cron job
+RUN chmod 0644 /etc/cron.d/maincron
+
+# Apply cron job
+RUN crontab /etc/cron.d/maincron
+
+# Create the log file to be able to run tail
+RUN touch /var/log/cron.log
+
+
+
+
+WORKDIR /data_pipes
+

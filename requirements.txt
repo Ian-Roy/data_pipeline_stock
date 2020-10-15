@@ -1,0 +1,16 @@
+pandas>=1.0.0
+requests>=1.0.0
+dask[complete]
+numpy 
+aiohttp
+argcomplete
+beautifulsoup4
+selenium
+matplotlib
+wget
+bs4 
+requests_html 
+blosc
+lz4
+ipdb
+

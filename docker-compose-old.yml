@@ -1,0 +1,78 @@
+version: '3'
+
+services:
+  #only needs to run the very first time
+  airflow_init:
+    image: "apache/airflow:1.10.12-python3.8"
+    command: initdb
+    env_file: 
+      - .env
+
+  airflow_web:
+    image: "apache/airflow:1.10.12-python3.8"
+    ports:
+      - 9000:8080
+    command: webserver
+    env_file: 
+      - .env
+    volumes:
+      - './config/airflow/dags:/opt/airflow/dags'
+      # - './config/airflow/airflow.cfg:/opt/airflow/airflow.cfg'
+
+  airflow_scheduler:
+    # image: "apache/airflow:1.10.11-python3.8"
+    command: scheduler
+    env_file: 
+      - .env
+    volumes:
+      - './config/airflow/dags:/opt/airflow/dags'
+      # - './config/airflow/airflow.cfg:/opt/airflow/airflow.cfg'
+    build:
+      context: ./
+      dockerfile: Dockerfile.airflow_scheduler
+
+  airflow_db:
+    image: 'postgres:11.6'
+    env_file: 
+      - .env
+    ports:
+      - 5432:5432 
+    volumes:
+      - airflow-db-volume:/var/lib/postgresql/data
+    
+
+  db:
+    image: "couchdb"
+    ports:
+      - 5984:5984
+    volumes:
+      - db-data:/opt/couchdb/data
+    env_file: 
+      - .env
+
+  dask_worker:
+    build:
+      context: ./
+      dockerfile: Dockerfile.dask_worker
+    command: ["dask-worker", "tcp://dask_scheduler:8786"]
+    env_file: 
+      - .env
+    ports:
+      - 8790:8786
+      - 8791:8787
+
+  dask_scheduler:
+    build:
+      context: ./
+      dockerfile: Dockerfile.dask_worker
+    command: ["dask-scheduler"]
+    env_file: 
+      - .env
+    ports:
+      - 8786:8786
+      - 8787:8787
+
+volumes:
+  db-data:
+  airflow-db-volume:
+  # web-data:

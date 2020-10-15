@@ -1,0 +1,11 @@
+FROM apache/airflow:1.10.12-python3.8
+
+USER root
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        build-essential \
+        libpq-dev
+
+COPY requirements.txt /opt/airflow/requirements.txt
+
+RUN pip3 install -r requirements.txt --user

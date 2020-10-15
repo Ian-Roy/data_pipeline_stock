@@ -1,0 +1,2 @@
+password='okcomputer'
+user='kid'
