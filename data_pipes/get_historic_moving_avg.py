@@ -40,4 +40,3 @@ for symb in symb_list:
 
 ou=client.gather(output,'skip')
 print(output)
-import ipdb; ipdb.set_trace()
